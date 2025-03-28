@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@plugin "daisyui" {
+	themes: light --default;
+}
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@utility container {
+	padding-inline: 1.5rem;
+	margin-inline: auto;
+
+	@variant sm {
+		padding-inline: 3rem;
+	}
+
+	@variant lg {
+		padding-inline: 3rem;
+	}
+
+	@variant xl {
+		padding-inline: 0;
+	}
+}
