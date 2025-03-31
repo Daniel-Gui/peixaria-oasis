@@ -20,5 +20,5 @@
 	</label>
 </div>
 
-<Drawer id="sidebar" direction="start" />
-<Drawer id="cart" direction="end" />
+<Drawer id="sidebar" type="sidebar" />
+<Drawer id="cart" type="cart" />
