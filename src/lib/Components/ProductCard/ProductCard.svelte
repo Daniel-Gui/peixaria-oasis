@@ -15,8 +15,8 @@
 			A card component has a figure, a body part, and inside body there are title and actions parts
 		</p>
 		<div class="card-actions">
-			<button class="btn btn-primary w-full space-x-2">
-				<span>Adicionar ao carrinho</span>
+			<button class="btn btn-primary w-full">
+				<span>Adicionar</span>
 				<ShoppingBasket class="h-4 w-4" />
 			</button>
 		</div>
