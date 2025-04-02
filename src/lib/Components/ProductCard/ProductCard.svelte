@@ -1,18 +1,38 @@
-<script>
+<script lang="ts">
 	import { ShoppingBasket } from 'lucide-svelte';
 	import Price from './Price.svelte';
 	import Badges from './Badges.svelte';
 	import Image from './Image.svelte';
+
+	type ProductCardProps = {
+		title: string;
+		description: string;
+		price: string | number;
+		promotionalPrice?: string | number;
+		unit: string;
+		tags?: Array<{ id: number; value: string; color: string }>;
+		imageUrl?: string;
+	};
+
+	let { 
+		title = 'Produto', 
+		description = '', 
+		price = '0.00', 
+		promotionalPrice = '0.00', 
+		unit = 'Kg',
+		tags = [],
+		imageUrl = '/images/collections/peixes/produto-placeholder.webp'
+	}: ProductCardProps = $props();
 </script>
 
 <div class="card bg-base-100 w-auto shadow-sm">
-	<Image />
+	<Image src={imageUrl} alt={title} />
 	<div class="card-body">
-		<h2 class="card-title">Titulo do Produto</h2>
-		<Price promotionalPrice={100} price={148} unit="Kg" />
-		<Badges />
+		<h2 class="card-title">{title}</h2>
+		<Price {promotionalPrice} {price} {unit} />
+		<Badges {tags} />
 		<p class="line-clamp-3 text-xs opacity-70">
-			A card component has a figure, a body part, and inside body there are title and actions parts
+			{description}
 		</p>
 		<div class="card-actions">
 			<button class="btn btn-primary w-full">
