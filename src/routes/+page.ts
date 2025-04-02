@@ -7,6 +7,7 @@ interface Product {
   Nome: string;
   Ativo: boolean;
   Preço: string;
+  'Preço Promocional'?: string; // Campo opcional para preço promocional
   Descrição: string;
   'Unidade de Medida': string;
   Tags: Array<{ id: number; value: string; color: string }>;

@@ -9,6 +9,7 @@
 	  Nome: string;
 	  Ativo: boolean;
 	  Preço: string;
+	  'Preço Promocional'?: string; // Campo opcional para preço promocional
 	  Descrição: string;
 	  'Unidade de Medida': string;
 	  Tags: Array<{ id: number; value: string; color: string }>;
@@ -118,6 +119,7 @@
 							title={product.Nome}
 							description={product.Descrição}
 							price={product.Preço}
+							promotionalPrice={product['Preço Promocional']}
 							unit={product['Unidade de Medida']}
 							tags={product.Tags || []}
 							imageUrl={product.Imagem && product.Imagem.length > 0 ? product.Imagem[0].url : undefined}
