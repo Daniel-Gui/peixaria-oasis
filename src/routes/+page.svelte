@@ -7,20 +7,50 @@
 
 	// Recebendo os dados da API através da função load
 	export let data: PageData;
-	const { products } = data;
-	console.log(products);
+	const { peixesAguaDoce, maisVendidos, salmao } = data;
+	console.log({ peixesAguaDoce, maisVendidos, salmao });
 </script>
 
 <Dock />
-{#if products && products.length > 0}
+
+<!-- Peixes de Água Doce -->
+{#if peixesAguaDoce && peixesAguaDoce.length > 0}
 	<Collection 
-		swiperId="collection-1" 
+		swiperId="peixes-agua-doce" 
 		customClass="bg-gray-100" 
 		title="Peixes de Água Doce" 
-		products={products} 
+		products={peixesAguaDoce} 
 	/>
 {:else}
 	<div class="py-10 text-center">
-		<p>Desculpe, não há produtos disponíveis para esta categoria no momento.</p>
+		<p>Desculpe, não há produtos disponíveis na categoria Peixes de Água Doce no momento.</p>
+	</div>
+{/if}
+
+<!-- Mais Vendidos -->
+{#if maisVendidos && maisVendidos.length > 0}
+	<Collection 
+		swiperId="mais-vendidos" 
+		customClass="bg-white" 
+		title="Mais Vendidos" 
+		products={maisVendidos} 
+	/>
+{:else}
+	<div class="py-10 text-center">
+		<p>Desculpe, não há produtos disponíveis na categoria Mais Vendidos no momento.</p>
+	</div>
+{/if}
+
+<!-- Salmão -->
+{#if salmao && salmao.length > 0}
+	<Collection 
+		swiperId="salmao" 
+		customClass="bg-gray-100" 
+		title="Salmão" 
+		products={salmao} 
+	/>
+{:else}
+	<div class="py-10 text-center">
+		<p>Desculpe, não há produtos disponíveis na categoria Salmão no momento.</p>
 	</div>
 {/if}

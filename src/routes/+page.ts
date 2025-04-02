@@ -36,8 +36,10 @@ interface ApiResponse {
 
 export const load: PageLoad = async ({ fetch }) => {
   try {
-    // ID da tabela "Peixes de água doce"
-    const tableId = 492181;
+    // IDs das tabelas
+    const peixesAguaDoceId = 492181;
+    const maisVendidosId = 493232;
+    const salmaoId = 493225;
     
     // Token da API do Baserow
     const token = import.meta.env.VITE_BASEROW_API_TOKEN;
@@ -46,27 +48,36 @@ export const load: PageLoad = async ({ fetch }) => {
       throw new Error('Token da API do Baserow não encontrado');
     }
     
-    // Fazendo a requisição para a API do Baserow
-    const response = await fetch(
-      `https://api.baserow.io/api/database/rows/table/${tableId}/?user_field_names=true`,
-      {
-        headers: {
-          Authorization: `Token ${token}`
+    // Função auxiliar para buscar produtos de uma tabela
+    async function fetchProducts(tableId: number): Promise<Product[]> {
+      const response = await fetch(
+        `https://api.baserow.io/api/database/rows/table/${tableId}/?user_field_names=true`,
+        {
+          headers: {
+            Authorization: `Token ${token}`
+          }
         }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar dados da tabela ${tableId}: ${response.status}`);
       }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Erro ao buscar dados: ${response.status}`);
+      
+      const data: ApiResponse = await response.json();
+      return data.results.filter(product => product.Ativo);
     }
     
-    const data: ApiResponse = await response.json();
-    
-    // Filtrando apenas produtos ativos
-    const activeProducts = data.results.filter(product => product.Ativo);
+    // Buscando produtos de todas as tabelas em paralelo
+    const [peixesAguaDoce, maisVendidos, salmao] = await Promise.all([
+      fetchProducts(peixesAguaDoceId),
+      fetchProducts(maisVendidosId),
+      fetchProducts(salmaoId)
+    ]);
     
     return {
-      products: activeProducts
+      peixesAguaDoce,
+      maisVendidos,
+      salmao
     };
   } catch (err) {
     console.error('Erro ao carregar produtos:', err);
