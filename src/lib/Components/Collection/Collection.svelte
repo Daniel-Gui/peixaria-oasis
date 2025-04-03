@@ -116,6 +116,7 @@
 				{#each products as product (product.id)}
 					<swiper-slide class="pb-10">
 						<ProductCard 
+							id={product.id}
 							title={product.Nome}
 							description={product.Descrição}
 							price={product.Preço}

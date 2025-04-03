@@ -9,10 +9,10 @@
 		<span class="dock-label">Menu</span>
 	</label>
 
-	<button class="dock-active">
+	<a class="dock-active" href="/">
 		<HomeIcon class="h-5 w-5" />
 		<span class="dock-label">Inicio</span>
-	</button>
+	</a>
 
 	<label for="cart">
 		<ShoppingBasket class="h-5 w-5" />

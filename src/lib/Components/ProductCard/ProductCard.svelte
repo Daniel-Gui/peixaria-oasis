@@ -5,6 +5,7 @@
 	import Image from './Image.svelte';
 
 	type ProductCardProps = {
+		id: number; // Adicionado ID do produto
 		title: string;
 		description: string;
 		price: string | number;
@@ -15,6 +16,7 @@
 	};
 
 	let { 
+		id = 0, // Valor padrão para o ID
 		title = 'Produto', 
 		description = '', 
 		price = '0.00', 
@@ -25,20 +27,23 @@
 	}: ProductCardProps = $props();
 </script>
 
-<div class="card bg-base-100 w-auto shadow-sm">
-	<Image src={imageUrl} alt={title} />
-	<div class="card-body">
-		<h2 class="card-title">{title}</h2>
-		<Price {promotionalPrice} {price} {unit} />
-		<Badges {tags} />
-		<p class="line-clamp-3 text-xs opacity-70">
-			{description}
-		</p>
-		<div class="card-actions">
-			<button class="btn btn-primary w-full">
-				<span>Adicionar</span>
-				<ShoppingBasket class="h-4 w-4" />
-			</button>
+<a href="/produto/{id}">
+	<div class="card bg-base-100 w-auto shadow-sm">
+		<Image src={imageUrl} alt={title} />
+		<div class="card-body">
+			<h2 class="card-title">{title}</h2>
+			<Price {promotionalPrice} {price} {unit} />
+			<Badges {tags} />
+			<p class="line-clamp-3 text-xs opacity-70">
+				{description}
+			</p>
+			<div class="card-actions">
+				<button class="btn btn-primary w-full">
+					<span>Adicionar</span>
+					<ShoppingBasket class="h-4 w-4" />
+				</button>
+			</div>
 		</div>
 	</div>
-</div>
+</a>
+
