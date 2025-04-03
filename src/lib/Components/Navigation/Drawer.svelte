@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { X } from 'lucide-svelte';
 	import ProductList from '../ShoppingCart/ProductList.svelte';
+	import Categories from './Categories.svelte';
 
 	type DrawerProps = {
 		id: string;
@@ -28,6 +29,9 @@
 			<div>
 				{#if type === 'cart'}
 					<ProductList />
+				{/if}
+				{#if type === 'sidebar'}
+					<Categories />
 				{/if}
 			</div>
 		</div>
