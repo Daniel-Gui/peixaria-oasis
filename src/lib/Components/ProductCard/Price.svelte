@@ -5,24 +5,36 @@
 	// 3 - Caso o preço promocional for maior que o preço normal (o que não deveria acontecer), não exibir a badge de desconto
 
 	type PriceProps = {
-		promotionalPrice?: number;
-		price: number;
+		promotionalPrice?: string | number;
+		price: string | number;
 		unit: string;
 	};
 
-	let { promotionalPrice = 0, price = 0, unit = 'Kg' }: PriceProps = $props();
+	let { promotionalPrice = '0.00', price = '0.00', unit = 'Kg' }: PriceProps = $props();
+
+	// Converter para número para comparações
+	const priceNum = typeof price === 'string' ? parseFloat(price) : price;
+	const promoNum = typeof promotionalPrice === 'string' ? parseFloat(promotionalPrice) : promotionalPrice;
+	
+	// Função simples para trocar o ponto pela vírgula
+	function formatPrice(value: string | number): string {
+		if (typeof value === 'string') {
+			return value.replace('.', ',');
+		}
+		return value.toFixed(2).replace('.', ',');
+	}
 </script>
 
 <div class="flex items-center gap-2">
-	{#if promotionalPrice > 0}
-		<h3>R${promotionalPrice}/{unit}</h3>
-		<h3 class="text-gray-400 line-through">R${price}/{unit}</h3>
-		{#if promotionalPrice > 0 && promotionalPrice < price}
+	{#if promoNum > 0}
+		<h3>R$ {formatPrice(promotionalPrice)}/{unit}</h3>
+		<h3 class="text-gray-400 line-through">R$ {formatPrice(price)}/{unit}</h3>
+		{#if promoNum > 0 && promoNum < priceNum}
 			<div class="badge badge-accent badge-xs md:badge-sm">
-				-{Math.round(((price - promotionalPrice) / price) * 100)}%
+				-{Math.round(((priceNum - promoNum) / priceNum) * 100)}%
 			</div>
 		{/if}
 	{:else}
-		<h3>R${price}/{unit}</h3>
+		<h3>R$ {formatPrice(price)}/{unit}</h3>
 	{/if}
 </div>

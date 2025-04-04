@@ -3,16 +3,44 @@
 	import ProductCard from '../ProductCard/ProductCard.svelte';
 	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 
+	// Definindo a interface para os produtos
+	interface Product {
+	  id: number;
+	  Nome: string;
+	  Ativo: boolean;
+	  Preço: string;
+	  'Preço Promocional'?: string; // Campo opcional para preço promocional
+	  Descrição: string;
+	  'Unidade de Medida': string;
+	  Tags: Array<{ id: number; value: string; color: string }>;
+	  Imagem: Array<{
+	    url: string;
+	    thumbnails: {
+	      tiny: { url: string; width: number; height: number };
+	      small: { url: string; width: number; height: number };
+	    };
+	    name: string;
+	    size: number;
+	    mime_type: string;
+	    is_image: boolean;
+	    image_width: number;
+	    image_height: number;
+	    uploaded_at: string;
+	  }>;
+	}
+
 	type CollectionProps = {
 		swiperId: string;
 		customClass?: string;
+		title: string;
+		products: Product[];
 	};
-	let { swiperId = 'collection', customClass = 'bg-gray-100' }: CollectionProps = $props();
+	let { swiperId = 'collection', customClass = 'bg-gray-100', title = 'Produtos', products = [] }: CollectionProps = $props();
 
 	let swiper: any;
 	onMount(() => {
 		// swiper element
-		const swiperEl = document.querySelector(`#${swiperId}`);
+		const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void };
 
 		// swiper parameters
 		const swiperParams = {
@@ -50,7 +78,10 @@
 
 		if (swiperEl) {
 			Object.assign(swiperEl, swiperParams);
-			swiperEl.initialize();
+			// Verificar se o método initialize existe antes de chamá-lo
+			if (typeof swiperEl.initialize === 'function') {
+				swiperEl.initialize();
+			}
 		}
 	});
 
@@ -69,7 +100,7 @@
 
 <section class="{customClass} space-y-4 py-10">
 	<div class="container flex items-center justify-between">
-		<h2 class="text-2xl font-semibold">Titulo da coleção</h2>
+		<h2 class="text-2xl font-semibold">{title}</h2>
 		<div class="space-x-2">
 			<button onclick={slidePrev} class="btn btn-circle rounded-full">
 				<ChevronLeft class="h-5 w-5" />
@@ -81,21 +112,28 @@
 	</div>
 	<div class="pl-6 md:pl-12 lg:container">
 		<swiper-container id={swiperId} init="false">
-			<swiper-slide class="pb-10">
-				<ProductCard />
-			</swiper-slide>
-			<swiper-slide class="pb-10">
-				<ProductCard />
-			</swiper-slide>
-			<swiper-slide class="pb-10">
-				<ProductCard />
-			</swiper-slide>
-			<swiper-slide class="pb-10">
-				<ProductCard />
-			</swiper-slide>
-			<swiper-slide class="pb-10">
-				<ProductCard />
-			</swiper-slide>
+			{#if products && products.length > 0}
+				{#each products as product (product.id)}
+					<swiper-slide class="pb-10">
+						<ProductCard 
+							id={product.id}
+							title={product.Nome}
+							description={product.Descrição}
+							price={product.Preço}
+							promotionalPrice={product['Preço Promocional']}
+							unit={product['Unidade de Medida']}
+							tags={product.Tags || []}
+							imageUrl={product.Imagem && product.Imagem.length > 0 ? product.Imagem[0].url : undefined}
+						/>
+					</swiper-slide>
+				{/each}
+			{:else}
+				<swiper-slide class="pb-10">
+					<div class="card bg-base-100 w-auto shadow-sm p-4 flex items-center justify-center">
+						<p>Nenhum produto encontrado nesta coleção.</p>
+					</div>
+				</swiper-slide>
+			{/if}
 		</swiper-container>
 	</div>
 </section>
