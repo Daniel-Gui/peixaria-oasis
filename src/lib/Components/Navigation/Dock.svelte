@@ -4,7 +4,7 @@
 	import { cart } from '$lib/stores/cartStore';
 </script>
 
-<div class="dock z-10 bg-gray-100 text-gray-500">
+<div class="dock z-10 bg-gray-100 text-gray-500 lg:hidden">
 	<label for="sidebar">
 		<MenuIcon class="h-5 w-5" />
 		<span class="dock-label">Menu</span>

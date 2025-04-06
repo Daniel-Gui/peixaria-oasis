@@ -3,6 +3,7 @@
 	import Dock from '$lib/Components/Navigation/Dock.svelte';
 	import { register } from 'swiper/element/bundle';
 	import type { PageData } from './$types';
+	import Navbar from '$lib/Components/Navigation/Navbar.svelte';
 	register();
 
 	// Recebendo os dados da API através da função load
@@ -10,6 +11,8 @@
 	const { peixesAguaDoce, maisVendidos, salmao } = data;
 	//console.log({ peixesAguaDoce, maisVendidos, salmao });
 </script>
+
+<Navbar />
 
 <Dock />
 
