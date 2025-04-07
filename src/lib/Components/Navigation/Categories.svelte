@@ -33,7 +33,7 @@
 	<li><h2 class="menu-title">Redes sociais</h2></li>
 	{#each socials as social}
 	<li>
-		<a href="/" target="_blank">  
+		<a href={social.url} target="_blank">  
 			{#if social.icon === IconInstagram}
 			<IconInstagram customClass="size-4" />
 			{:else if social.icon === IconFacebook}
