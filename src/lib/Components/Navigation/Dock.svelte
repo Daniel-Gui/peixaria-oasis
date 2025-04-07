@@ -2,6 +2,9 @@
 	import { HomeIcon, MenuIcon, ShoppingBasket } from 'lucide-svelte';
 	import Drawer from './Drawer.svelte';
 	import { cart } from '$lib/stores/cartStore';
+	
+	// Acessar a store derivada de totalItems
+	const totalItems = cart.totalItems;
 </script>
 
 <div class="dock z-10 bg-gray-100 text-gray-500 lg:hidden">
@@ -16,8 +19,8 @@
 	</a>
 
 	<label for="cart" class="indicator">
-		{#if $cart.length > 0}
-			<span class="indicator-item badge badge-sm badge-primary">{$cart.length}</span>
+		{#if $totalItems > 0}
+			<span class="indicator-item badge badge-sm badge-primary">{$totalItems}</span>
 		{/if}
 		<div>
 			<ShoppingBasket class="h-5 w-5" />

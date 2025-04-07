@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Trash } from 'lucide-svelte';
+	import { Trash, Plus, Minus } from 'lucide-svelte';
 	import { cart } from '$lib/stores/cartStore';
 	
 	// Função para formatar o preço
@@ -21,9 +21,19 @@
 			const price = item.promotionalPrice && parseFloat(String(item.promotionalPrice)) > 0 
 				? parseFloat(String(item.promotionalPrice)) 
 				: parseFloat(String(item.price));
-			return sum + price;
+			return sum + (price * item.quantity);
 		}, 0);
 		return formatPrice(total);
+	}
+	
+	// Função para aumentar a quantidade de um item
+	function increaseQuantity(id: number) {
+		cart.addItem({ id } as any);
+	}
+	
+	// Função para diminuir a quantidade de um item
+	function decreaseQuantity(id: number) {
+		cart.decreaseQuantity(id);
 	}
 
 	// Função para gerar mensagem de WhatsApp
@@ -35,7 +45,7 @@
 			const price = item.promotionalPrice && parseFloat(String(item.promotionalPrice)) > 0 
 				? formatPrice(item.promotionalPrice) 
 				: formatPrice(item.price);
-			message += `- ${item.name}: R$ ${price}/${item.unit}\n`;
+			message += `- ${item.quantity}x ${item.name}: R$ ${price}/${item.unit}\n`;
 		});
 		
 		message += `\nTotal: R$ ${calculateTotal()}`;
@@ -49,11 +59,11 @@
 		<div>
 			<ul class="bg-base-100 rounded-box list space-y-2">
 				{#each $cart as item (item.id)}
-					<li class="list-row grid grid-cols-7 items-center gap-2 p-2">
+					<li class="list-row grid grid-cols-8 items-center gap-2 p-2">
 						<div class="col-span-2">
 							<img class="rounded-box size-16 object-cover" src={item.imageUrl || '/images/collections/peixes/produto-placeholder.webp'} alt={item.name} />
 						</div>
-						<div class="col-span-4">
+						<div class="col-span-5">
 							<h3 class="line-clamp-2 text-xs">{item.name}</h3>
 							<p class="text-sm">
 								{#if item.promotionalPrice && parseFloat(String(item.promotionalPrice)) > 0}
@@ -62,9 +72,19 @@
 									R$ {formatPrice(item.price)}/{item.unit}
 								{/if}
 							</p>
+							<div class="join">
+								<button onclick={() => decreaseQuantity(item.id)} class="btn btn-xs join-item">
+									<Minus class="h-3 w-3" />
+								</button>
+								<span class="join-item px-2 flex items-center justify-center bg-base-200 min-w-8">{item.quantity}</span>
+								<button onclick={() => increaseQuantity(item.id)} class="btn btn-xs join-item">
+									<Plus class="h-3 w-3" />
+								</button>
+							</div>
 						</div>
+						
 						<div class="col-span-1">
-							<button on:click={() => removeFromCart(item.id)} class="btn btn-ghost btn-sm p-1">
+							<button onclick={() => removeFromCart(item.id)} class="btn btn-ghost btn-sm p-1">
 								<Trash class="h-5 w-5 text-red-500" />
 							</button>
 						</div>

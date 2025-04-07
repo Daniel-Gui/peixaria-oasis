@@ -32,13 +32,6 @@
 	function addToCart(event: Event) {
 		event.preventDefault();
 		
-		// Verificar se o produto já está no carrinho
-		if (cart.hasItem(id)) {
-			// Notificar o usuário que o produto já está no carrinho
-			toast.info(`${title} já está no seu carrinho!`);
-			return;
-		}
-		
 		// Adicionar o produto ao carrinho
 		const added = cart.addItem({
 			id,
@@ -46,12 +39,18 @@
 			price,
 			promotionalPrice,
 			unit,
-			imageUrl
+			imageUrl,
+			quantity: 1
 		});
 		
 		// Notificar o usuário
 		if (added) {
-			toast.success(`${title} adicionado ao carrinho!`);
+			// Verificar se o item já existia no carrinho
+			if (cart.hasItem(id) && cart.getItemQuantity(id) > 1) {
+				toast.success(`Adicionado mais um ${title} ao carrinho!`);
+			} else {
+				toast.success(`${title} adicionado ao carrinho!`);
+			}
 		}
 	}
 </script>
