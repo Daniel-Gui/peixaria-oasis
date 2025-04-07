@@ -1,13 +1,58 @@
+<script lang="ts">
+	import IconWhatsapp from '../CustomIcons/IconWhatsapp.svelte';
+	import IconFacebook from '../CustomIcons/IconFacebook.svelte';
+	import IconInstagram from '../CustomIcons/IconInstagram.svelte';
+	import IconEmail from '../CustomIcons/IconEmail.svelte';
+	import IconMap from '../CustomIcons/IconMap.svelte';
+
+	const googleMapsUrl: string = 'https://maps.app.goo.gl/FrG3fcqxkYrgSR5v9';
+	const emailUrl: string = 'mailto:peixariaoasis@gmail.com';
+	const whatsappUrl: string = 'https://wa.me/5567999915087';
+	const socials = [
+		{
+			name: 'Instagram',
+			url: '/',
+			icon: IconInstagram
+		},
+		{
+			name: 'Facebook',
+			url: '/',
+			icon: IconFacebook
+		},
+	];
+</script>
+
 <ul class="menu w-full">
-	<li><h2 class="menu-title">Peixes</h2></li>
+	<!-- Categorias -->
+	<li><h2 class="menu-title">Categorias</h2></li>
+	<li><a href="/">Mais vendidos</a></li>
+	<li><a href="/">Peixes de água doce</a></li>
+	<li><a href="/">Salmão</a></li>
+
+	<!-- Redes Sociais -->
+	<li><h2 class="menu-title">Redes sociais</h2></li>
+	{#each socials as social}
 	<li>
-		<details open>
-			<summary>Parent</summary>
-			<ul>
-				<li><a href="/">Submenu 1</a></li>
-				<li><a href="/">Submenu 2</a></li>
-			</ul>
-		</details>
+		<a href="/" target="_blank">  
+			{#if social.icon === IconInstagram}
+			<IconInstagram customClass="size-4" />
+			{:else if social.icon === IconFacebook}
+			<IconFacebook customClass="size-4" />
+			{/if}
+			<span>{social.name}</span>
+		</a>
 	</li>
-	<li><a href="/">Item 3</a></li>
+	{/each}
+
+	<!-- Suporte -->
+	<li><h2 class="menu-title">Suporte</h2></li>
+	<li>
+		<a href={whatsappUrl} target="_blank"> <IconWhatsapp customClass="size-4" /> <span>WhatsApp</span></a>
+	</li>
+	<li><a href={emailUrl} target="_blank" rel="noopener noreferrer"> <IconEmail customClass="size-4" /> <span>Email</span></a></li>
+	<li>
+		<a href={googleMapsUrl} target="_blank">
+			<IconMap customClass="size-4" /> <span>Localização</span></a
+		>
+	</li>
 </ul>
