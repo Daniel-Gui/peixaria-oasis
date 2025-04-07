@@ -40,7 +40,7 @@
 
 	// Função para gerar mensagem de WhatsApp
 	function generateWhatsAppMessage() {
-		const phoneNumber = '5591984959195'; // Substitua pelo número correto
+		const phoneNumber = '5567999915087'; // Substitua pelo número correto
 		let message = 'Olá! Gostaria de fazer o seguinte pedido:\n';
 		
 		$cart.forEach((item: any) => {
@@ -50,7 +50,7 @@
 			message += `- ${item.quantity}x ${item.name}: R$ ${price}/${item.unit}\n`;
 		});
 		
-		message += `\nTotal: R$ ${calculateTotal()}`;
+		message += `\nTotal estimado: R$ ${calculateTotal()}`;
 		
 		return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 	}
