@@ -39,7 +39,7 @@
 
 	// Função para gerar mensagem de WhatsApp
 	function generateWhatsAppMessage() {
-		const phoneNumber = '5511999999999'; // Substitua pelo número correto
+		const phoneNumber = '5591984959195'; // Substitua pelo número correto
 		let message = 'Olá! Gostaria de fazer o seguinte pedido:\n';
 		
 		$cart.forEach((item: any) => {
