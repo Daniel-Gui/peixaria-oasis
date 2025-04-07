@@ -6,10 +6,24 @@
 	import Navbar from '$lib/Components/Navigation/Navbar.svelte';
 	register();
 
-	// Recebendo os dados da API através da função load
-	export let data: PageData;
-	const { peixesAguaDoce, maisVendidos, salmao } = data;
-	//console.log({ peixesAguaDoce, maisVendidos, salmao });
+	// Recebendo os dados da API através da função load usando $props
+	let { data } = $props();
+	
+	// Usando $derived para extrair os dados de produtos
+	const peixesAguaDoce = $derived(data.peixesAguaDoce);
+	const maisVendidos = $derived(data.maisVendidos);
+	const salmao = $derived(data.salmao);
+	
+	// Usando $derived para verificar se as coleções têm produtos
+	const temPeixesAguaDoce = $derived(peixesAguaDoce && peixesAguaDoce.length > 0);
+	const temMaisVendidos = $derived(maisVendidos && maisVendidos.length > 0);
+	const temSalmao = $derived(salmao && salmao.length > 0);
+	
+	// Usando $effect para registrar quando a página é carregada
+	$effect(() => {
+		console.log('Página inicial carregada');
+		console.log(`Total de produtos carregados: ${(peixesAguaDoce?.length || 0) + (maisVendidos?.length || 0) + (salmao?.length || 0)}`);
+	});
 </script>
 
 <Navbar />
@@ -17,7 +31,7 @@
 <!--<Dock />-->
 
 <!-- Mais Vendidos -->
-{#if maisVendidos && maisVendidos.length > 0}
+{#if temMaisVendidos}
 	<Collection
 		swiperId="mais-vendidos"
 		customClass="bg-white"
@@ -31,7 +45,7 @@
 {/if}
 
 <!-- Peixes de Água Doce -->
-{#if peixesAguaDoce && peixesAguaDoce.length > 0}
+{#if temPeixesAguaDoce}
 	<Collection
 		swiperId="peixes-agua-doce"
 		customClass="bg-gray-100"
@@ -45,7 +59,7 @@
 {/if}
 
 <!-- Salmão -->
-{#if salmao && salmao.length > 0}
+{#if temSalmao}
 	<Collection swiperId="salmao" customClass="bg-gray-100" title="Salmão" products={salmao} />
 {:else}
 	<div class="py-10 text-center container">

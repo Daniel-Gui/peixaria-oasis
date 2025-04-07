@@ -4,10 +4,33 @@
 	import IconInstagram from '../CustomIcons/IconInstagram.svelte';
 	import IconEmail from '../CustomIcons/IconEmail.svelte';
 	import IconMap from '../CustomIcons/IconMap.svelte';
+	import { page } from '$app/stores';
 
+	// URLs para contato
 	const googleMapsUrl: string = 'https://maps.app.goo.gl/FrG3fcqxkYrgSR5v9';
 	const emailUrl: string = 'mailto:peixariaoasis@gmail.com';
 	const whatsappUrl: string = 'https://wa.me/5567999915087';
+	
+	// Categorias de produtos
+	const categories = [
+		{
+			name: 'Mais vendidos',
+			slug: 'mais-vendidos'
+		},
+		{
+			name: 'Peixes de água doce',
+			slug: 'peixes-agua-doce'
+		},
+		{
+			name: 'Salmão',
+			slug: 'salmao'
+		}
+	];
+	
+	// Verifica qual categoria está atualmente selecionada usando $derived
+	const currentSlug = $derived($page.params.slug);
+	
+	// Redes sociais
 	const socials = [
 		{
 			name: 'Instagram',
@@ -25,9 +48,16 @@
 <ul class="menu w-full">
 	<!-- Categorias -->
 	<li><h2 class="menu-title">Categorias</h2></li>
-	<li><a href="/">Mais vendidos</a></li>
-	<li><a href="/">Peixes de água doce</a></li>
-	<li><a href="/">Salmão</a></li>
+	{#each categories as category}
+		<li>
+			<a 
+				href="/categoria/{category.slug}" 
+				class="{currentSlug === category.slug ? 'active font-semibold bg-primary/10 text-primary' : ''}"
+			>
+				{category.name}
+			</a>
+		</li>
+	{/each}
 
 	<!-- Redes Sociais -->
 	<li><h2 class="menu-title">Redes sociais</h2></li>

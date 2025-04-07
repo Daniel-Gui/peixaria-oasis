@@ -1,23 +1,43 @@
-<script>
-
+<script lang="ts">
 	import ProductCard from "../ProductCard/ProductCard.svelte";
 
-	const id = 1;
-	const title = 'Salmão';
-	const description = 'Salmão';
-	const price = 10.00;
-	const unit = 'kg';
+	// Recebe props dinâmicas
+	export let title = 'Coleção';
+	export let products: Array<{
+		id: number;
+		title: string;
+		description: string;
+		price: number;
+		unit: string;
+		imageUrl?: string;
+		promotionalPrice?: number;
+	}> = [];
 </script>
 <section>
     <div class="container py-10 space-y-6">
         <div class="text-center">
             <h2 class="text-2xl font-bold mb-4">{title}</h2>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <ProductCard id={id} title={title} description={description} price={price} unit={unit} />
-            <ProductCard id={id} title={title} description={description} price={price} unit={unit} />
-            <ProductCard id={id} title={title} description={description} price={price} unit={unit} />
-            <ProductCard id={id} title={title} description={description} price={price} unit={unit} />
-        </div>
+        
+        {#if products.length > 0}
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {#each products as product (product.id)}
+                    <ProductCard 
+                        id={product.id} 
+                        title={product.title} 
+                        description={product.description} 
+                        price={product.price} 
+                        unit={product.unit} 
+                        imageUrl={product.imageUrl} 
+                        promotionalPrice={product.promotionalPrice} 
+                    />
+                {/each}
+            </div>
+        {:else}
+            <div class="py-10 text-center container">
+                <p>Desculpe, não há produtos disponíveis nesta categoria no momento.</p>
+                <a href="/" class="btn btn-primary mt-4">Voltar para a página inicial</a>
+            </div>
+        {/if}
     </div>
 </section>

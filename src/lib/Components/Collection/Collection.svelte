@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import ProductCard from '../ProductCard/ProductCard.svelte';
 	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 
@@ -35,11 +34,20 @@
 		title: string;
 		products: Product[];
 	};
+	
+	// Usando $props para receber as propriedades do componente
 	let { swiperId = 'collection', customClass = 'bg-gray-100', title = 'Produtos', products = [] }: CollectionProps = $props();
 
-	let swiper: any;
-	onMount(() => {
-		// swiper element
+	// Usando $state para variáveis de estado
+	let swiper = $state<any>(null);
+	
+	// Usando $derived para valores derivados
+	const hasProducts = $derived(products && products.length > 0);
+	
+	// Usando $effect para inicializar o swiper após a montagem do componente
+	$effect(() => {
+		// Este código será executado após a renderização inicial
+		// Similar ao onMount, mas com capacidades reativas
 		const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void };
 
 		// swiper parameters
@@ -83,8 +91,12 @@
 				swiperEl.initialize();
 			}
 		}
+		
+		// Registrar quando a coleção é inicializada
+		console.log(`Coleção ${title} inicializada com ${products.length} produtos`);
 	});
 
+	// Funções para navegar entre os slides
 	function slideNext() {
 		if (swiper) {
 			swiper.slideNext();
@@ -112,7 +124,7 @@
 	</div>
 	<div class="pl-6 md:pl-12 lg:container">
 		<swiper-container id={swiperId} init="false">
-			{#if products && products.length > 0}
+			{#if hasProducts}
 				{#each products as product (product.id)}
 					<swiper-slide class="pb-10">
 						<ProductCard 
