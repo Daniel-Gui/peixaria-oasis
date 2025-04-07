@@ -25,7 +25,7 @@
 		products={maisVendidos}
 	/>
 {:else}
-	<div class="py-10 text-center">
+	<div class="py-10 text-center container">
 		<p>Desculpe, não há produtos disponíveis na categoria Mais Vendidos no momento.</p>
 	</div>
 {/if}
@@ -39,7 +39,7 @@
 		products={peixesAguaDoce}
 	/>
 {:else}
-	<div class="py-10 text-center">
+	<div class="py-10 text-center container">
 		<p>Desculpe, não há produtos disponíveis na categoria Peixes de Água Doce no momento.</p>
 	</div>
 {/if}
@@ -48,7 +48,7 @@
 {#if salmao && salmao.length > 0}
 	<Collection swiperId="salmao" customClass="bg-gray-100" title="Salmão" products={salmao} />
 {:else}
-	<div class="py-10 text-center">
+	<div class="py-10 text-center container">
 		<p>Desculpe, não há produtos disponíveis na categoria Salmão no momento.</p>
 	</div>
 {/if}

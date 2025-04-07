@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Trash, Plus, Minus } from 'lucide-svelte';
 	import { cart } from '$lib/stores/cartStore';
+	import CartInformation from './CartInformation.svelte';
 	
 	// Função para formatar o preço
 	function formatPrice(value: string | number): string {
@@ -92,9 +93,12 @@
 				{/each}
 			</ul>
 			<div class="mt-4 flex justify-between items-center px-2">
-				<span class="font-semibold">Total:</span>
+				<span class="font-semibold">Total Estimado:</span>
 				<span class="font-bold">R$ {calculateTotal()}</span>
 			</div>
+		</div>
+		<div>
+			<CartInformation />
 		</div>
 		<div class="space-y-2">
 			<a href={generateWhatsAppMessage()} target="_blank" rel="noopener noreferrer" class="btn btn-success w-full">
