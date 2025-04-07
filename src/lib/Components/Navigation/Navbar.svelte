@@ -2,12 +2,11 @@
     import { MenuIcon, ShoppingBasket } from 'lucide-svelte';
     import Drawer from './Drawer.svelte';
     import { cart } from '$lib/stores/cartStore';
-    import { onMount } from 'svelte';
     
-    let isScrolled = false;
-    let navbar: HTMLElement;
+    let isScrolled = $state(false);
+    let navbar = $state<HTMLElement | null>(null);
     
-    onMount(() => {
+    $effect(() => {
         const handleScroll = () => {
             isScrolled = window.scrollY > 50; // Aumentado para 50px para não ativar muito cedo
         };

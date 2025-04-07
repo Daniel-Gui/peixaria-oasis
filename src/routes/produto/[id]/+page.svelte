@@ -4,8 +4,16 @@
 	import ProductInfo from "$lib/Components/ProductInfo/ProductInfo.svelte";
 	import type { PageData } from './$types';
 	
-	export let data: PageData;
-	const { product } = data;
+	// Usando $props para receber os dados da página
+	let { data } = $props();
+	
+	// Usando $derived para extrair o produto dos dados
+	const product = $derived(data.product);
+	
+	// Usando $effect para registrar quando o produto é visualizado
+	$effect(() => {
+		console.log(`Visualizando produto: ${product.Nome} (ID: ${product.id})`);
+	});
 </script>
 
 <Navbar />

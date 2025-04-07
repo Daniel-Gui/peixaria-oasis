@@ -2,6 +2,7 @@
 	import { Trash, Plus, Minus } from 'lucide-svelte';
 	import { cart } from '$lib/stores/cartStore';
 	import CartInformation from './CartInformation.svelte';
+	import IconWhatsapp from '../CustomIcons/IconWhatsapp.svelte';
 	
 	// Função para formatar o preço
 	function formatPrice(value: string | number): string {
@@ -102,7 +103,8 @@
 		</div>
 		<div class="space-y-2">
 			<a href={generateWhatsAppMessage()} target="_blank" rel="noopener noreferrer" class="btn btn-success w-full">
-				Comprar
+				<span class="text-sm">Comprar</span>
+				<IconWhatsapp customClass="size-3" />
 			</a>
 			<p class="text-center text-xs tracking-wide opacity-60">
 				Você será redirecionado para o WhatsApp
