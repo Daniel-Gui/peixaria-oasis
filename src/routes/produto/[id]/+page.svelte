@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Dock from "$lib/Components/Navigation/Dock.svelte";
+	import Navbar from "$lib/Components/Navigation/Navbar.svelte";
 	import ProductInfo from "$lib/Components/ProductInfo/ProductInfo.svelte";
 	import type { PageData } from './$types';
 	
@@ -7,7 +8,8 @@
 	const { product } = data;
 </script>
 
-<Dock />
+<Navbar />
+<!--<Dock />-->
 <ProductInfo 
 	title={product.Nome}
 	description={product.Descrição}

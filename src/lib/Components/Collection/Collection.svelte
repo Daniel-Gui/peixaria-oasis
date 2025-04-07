@@ -98,9 +98,9 @@
 	}
 </script>
 
-<section class="{customClass} space-y-4 py-10">
+<section class="{customClass} space-y-4 lg:space-y-6 py-10">
 	<div class="container flex items-center justify-between">
-		<h2 class="text-2xl font-semibold">{title}</h2>
+		<h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">{title}</h2>
 		<div class="space-x-2">
 			<button onclick={slidePrev} class="btn btn-circle rounded-full">
 				<ChevronLeft class="h-5 w-5" />
