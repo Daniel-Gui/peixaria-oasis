@@ -14,7 +14,7 @@
 
 <Navbar />
 
-<Dock />
+<!--<Dock />-->
 
 <!-- Mais Vendidos -->
 {#if maisVendidos && maisVendidos.length > 0}

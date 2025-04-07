@@ -1,35 +1,32 @@
-<script>
-    import { ShoppingBasket } from 'lucide-svelte';
+<script lang="ts">
+    import { MenuIcon, ShoppingBasket } from 'lucide-svelte';
+    import Drawer from './Drawer.svelte';
     import { cart } from '$lib/stores/cartStore';
-	import Drawer from './Drawer.svelte';
-
-    const menuItems = [
-        { id: 4, label: 'Mais Vendidos', href: '/mais-vendidos' },
-        { id: 1, label: 'Inicio', href: '/' },
-        { id: 2, label: 'Peixes de Água Doce', href: '/peixes-agua-doce' },
-        { id: 3, label: 'Salmão', href: '/salmao' },
-     
-    ];
 </script>
 
-<div class="navbar bg-base-100 shadow-sm">
-    <div class="navbar-start">
+<nav class="shadow-sm">
+    <div class="container flex items-center justify-between py-5">
+        <div>
+            <label for="sidebar" class="cursor-pointer">
+                <MenuIcon class="h-7 w-7" />
+            </label>
+        </div>
+        <div>
+            <a href="/">
+                <img class="w-26 lg:w-32 h-auto" src="/images/brand/brandcompany.webp" alt="logo-marca">
+            </a>
+        </div>
+        <div>
+            <label for="cart" class="indicator cursor-pointer">
+                {#if $cart.length > 0}
+                    <span class="indicator-item badge badge-sm badge-primary">{$cart.length}</span>
+                {/if}
+                <ShoppingBasket class="h-7 w-7" />
+            </label>
+        </div>
+    </div>
+</nav>
 
-    </div>
-    <div class="navbar-center gap-4">
-    {#each menuItems as {id, label, href} }
-    <a href={href} class="text-sm opacity-70 hover:opacity-100">{label}</a>
-    {/each}
-   
-    </div>
-    <div class="navbar-end">
-        <label for="cart" class="relative">
-            <ShoppingBasket class="h-5 w-5" />
-            {#if $cart.length > 0}
-                <span class="badge badge-sm badge-primary absolute -top-2 -right-2">{$cart.length}</span>
-            {/if}
-        </label>
-    </div>
-  </div>
-
-  <Drawer id="cart" type="cart" />
+  
+<Drawer id="sidebar" type="sidebar" />
+<Drawer id="cart" type="cart" />

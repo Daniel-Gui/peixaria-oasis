@@ -15,12 +15,14 @@
 		<span class="dock-label">Inicio</span>
 	</a>
 
-	<label for="cart" class="relative">
-		<ShoppingBasket class="h-5 w-5" />
+	<label for="cart" class="indicator">
 		{#if $cart.length > 0}
-			<span class="badge badge-sm badge-primary absolute -top-2 -right-2">{$cart.length}</span>
+			<span class="indicator-item badge badge-sm badge-primary">{$cart.length}</span>
 		{/if}
-		<span class="dock-label">Minha cesta</span>
+		<div>
+			<ShoppingBasket class="h-5 w-5" />
+			<span class="dock-label">Minha cesta</span>
+		</div>
 	</label>
 </div>
 
