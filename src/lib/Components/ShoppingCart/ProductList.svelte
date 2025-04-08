@@ -3,6 +3,7 @@
 	import { cart } from '$lib/stores/cartStore';
 	import CartInformation from './CartInformation.svelte';
 	import IconWhatsapp from '../CustomIcons/IconWhatsapp.svelte';
+	import Form from './Form.svelte';
 	
 	// Função para formatar o preço
 	function formatPrice(value: string | number): string {
@@ -38,11 +39,15 @@
 		cart.decreaseQuantity(id);
 	}
 
+	// Referência ao componente Form para acessar os dados do formulário
+	let formComponent: { getFormData: () => any };
+
 	// Função para gerar mensagem de WhatsApp
 	function generateWhatsAppMessage() {
 		const phoneNumber = '5567999915087'; // Substitua pelo número correto
 		let message = 'Olá! Gostaria de fazer o seguinte pedido:\n';
 		
+		// Adiciona os itens do pedido
 		$cart.forEach((item: any) => {
 			const price = item.promotionalPrice && parseFloat(String(item.promotionalPrice)) > 0 
 				? formatPrice(item.promotionalPrice) 
@@ -51,6 +56,34 @@
 		});
 		
 		message += `\nTotal estimado: R$ ${calculateTotal()}`;
+		
+		// Adiciona as informações do formulário
+		if (formComponent) {
+			const formData = formComponent.getFormData();
+			
+			// Adiciona método de pagamento
+			const paymentMethodLabels: Record<string, string> = {
+				'PIX': 'PIX',
+				'credit_card_link': 'Cartão de crédito via link',
+				'credit_card_machine': 'Cartão de crédito via maquininha',
+				'debit_card_machine': 'Cartão de débito via maquininha',
+				'cash': 'Dinheiro'
+			};
+			message += `\n\nMétodo de pagamento: ${paymentMethodLabels[formData.paymentMethod]}`;
+			
+			// Adiciona informações de entrega
+			if (formData.deliveryType === 'pickup') {
+				message += '\n\nVou retirar na loja.';
+			} else if (formData.deliveryType === 'delivery') {
+				message += '\n\nPreciso de entrega no endereço:';
+				message += `\nRua: ${formData.address.street}`;
+				message += `\nNúmero: ${formData.address.number}`;
+				message += `\nBairro: ${formData.address.neighborhood}`;
+				if (formData.address.complement) {
+					message += `\nComplemento: ${formData.address.complement}`;
+				}
+			}
+		}
 		
 		return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 	}
@@ -99,8 +132,9 @@
 			</div>
 		</div>
 		<div>
-			<CartInformation />
+			<Form bind:this={formComponent} />
 		</div>
+		
 		<div class="space-y-2">
 			<a href={generateWhatsAppMessage()} target="_blank" rel="noopener noreferrer" class="btn btn-success w-full">
 				<span class="text-sm">Comprar</span>
@@ -109,6 +143,9 @@
 			<p class="text-center text-xs tracking-wide opacity-60">
 				Você será redirecionado para o WhatsApp
 			</p>
+		</div>
+		<div>
+			<CartInformation />
 		</div>
 	{:else}
 		<div class="py-10 text-center">
