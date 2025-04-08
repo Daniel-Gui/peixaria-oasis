@@ -61,6 +61,9 @@
 		if (formComponent) {
 			const formData = formComponent.getFormData();
 			
+			// Adiciona nome do cliente
+			message += `\n\nNome: ${formData.customerName}`;
+			
 			// Adiciona método de pagamento
 			const paymentMethodLabels: Record<string, string> = {
 				'PIX': 'PIX',
