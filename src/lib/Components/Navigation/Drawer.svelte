@@ -16,7 +16,7 @@
 
 	<div class="drawer-side">
 		<label for={id} aria-label="close sidebar" class="drawer-overlay"></label>
-		<div class="bg-base-300 text-base-content min-h-full w-80 space-y-4 p-4">
+		<div class="bg-base-300 text-base-content min-h-full {type === 'cart' ? 'w-80 lg:w-[500px]' : 'w-80'} space-y-4 p-4">
 			<div
 				class="flex"
 				class:justify-end={type === 'sidebar'}
