@@ -4,6 +4,7 @@
 	import CartInformation from './CartInformation.svelte';
 	import IconWhatsapp from '../CustomIcons/IconWhatsapp.svelte';
 	import Form from './Form.svelte';
+	import { onMount } from 'svelte';
 	
 	// Função para formatar o preço
 	function formatPrice(value: string | number): string {
@@ -41,6 +42,11 @@
 
 	// Referência ao componente Form para acessar os dados do formulário
 	let formComponent: { getFormData: () => any };
+	
+	// Variáveis para controlar a validação e erros
+	let whatsappUrl = '';
+	let errorMessage = '';
+	let formValid = false;
 
 	// Função para gerar mensagem de WhatsApp
 	function generateWhatsAppMessage() {
@@ -57,38 +63,59 @@
 		
 		message += `\nTotal estimado: R$ ${calculateTotal()}`;
 		
-		// Adiciona as informações do formulário
+		// Adiciona as informações do formulário se a validação for bem-sucedida
 		if (formComponent) {
-			const formData = formComponent.getFormData();
-			
-			// Adiciona nome do cliente
-			message += `\n\nNome: ${formData.customerName}`;
-			
-			// Adiciona método de pagamento
-			const paymentMethodLabels: Record<string, string> = {
-				'PIX': 'PIX',
-				'credit_card_link': 'Cartão de crédito via link',
-				'credit_card_machine': 'Cartão de crédito via maquininha',
-				'debit_card_machine': 'Cartão de débito via maquininha',
-				'cash': 'Dinheiro'
-			};
-			message += `\n\nMétodo de pagamento: ${paymentMethodLabels[formData.paymentMethod]}`;
+			try {
+				const formData = formComponent.getFormData();
+				
+				// Adiciona nome do cliente
+				message += `\n\nNome: ${formData.customerName}`;
+				
+				// Adiciona método de pagamento
+				const paymentMethodLabels: Record<string, string> = {
+					'PIX': 'PIX',
+					'credit_card_link': 'Cartão de crédito via link',
+					'credit_card_machine': 'Cartão de crédito via maquininha',
+					'debit_card_machine': 'Cartão de débito via maquininha',
+					'cash': 'Dinheiro'
+				};
+				message += `\n\nMétodo de pagamento: ${paymentMethodLabels[formData.paymentMethod]}`;
 			
 			// Adiciona informações de entrega
-			if (formData.deliveryType === 'pickup') {
-				message += '\n\nVou retirar na loja.';
-			} else if (formData.deliveryType === 'delivery') {
-				message += '\n\nPreciso de entrega no endereço:';
-				message += `\nRua: ${formData.address.street}`;
-				message += `\nNúmero: ${formData.address.number}`;
-				message += `\nBairro: ${formData.address.neighborhood}`;
-				if (formData.address.complement) {
-					message += `\nComplemento: ${formData.address.complement}`;
+				if (formData.deliveryType === 'pickup') {
+					message += '\n\nVou retirar na loja.';
+				} else if (formData.deliveryType === 'delivery') {
+					message += '\n\nPreciso de entrega no endereço:';
+					message += `\nRua: ${formData.address.street}`;
+					message += `\nNúmero: ${formData.address.number}`;
+					message += `\nBairro: ${formData.address.neighborhood}`;
+					if (formData.address.complement) {
+						message += `\nComplemento: ${formData.address.complement}`;
+					}
 				}
+				
+				formValid = true;
+				errorMessage = '';
+			} catch (error: any) {
+				formValid = false;
+				errorMessage = error.message;
+				return '';
 			}
 		}
 		
-		return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+		const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+		return url;
+	}
+	
+	// Função para validar o formulário e gerar a URL do WhatsApp
+	function validateAndGenerateUrl() {
+		try {
+			whatsappUrl = generateWhatsAppMessage();
+			return true;
+		} catch (error: any) {
+			errorMessage = error.message;
+			return false;
+		}
 	}
 </script>
 
@@ -139,10 +166,23 @@
 		</div>
 		
 		<div class="space-y-2">
-			<a href={generateWhatsAppMessage()} target="_blank" rel="noopener noreferrer" class="btn btn-success w-full">
+			{#if errorMessage}
+				<div class="alert alert-error">
+					<span>{errorMessage}</span>
+				</div>
+			{/if}
+			
+			<button 
+				onclick={() => {
+					if (validateAndGenerateUrl() && whatsappUrl) {
+						window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+					}
+				}}
+				class="btn btn-success w-full"
+			>
 				<span class="text-sm">Comprar</span>
 				<IconWhatsapp customClass="size-3" />
-			</a>
+			</button>
 			<p class="text-center text-xs tracking-wide opacity-60">
 				Você será redirecionado para o WhatsApp
 			</p>

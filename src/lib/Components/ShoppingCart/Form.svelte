@@ -52,7 +52,7 @@
     <div class="form-control w-full space-y-2">
         <label class="floating-label">
             <span class="flex items-center gap-2"> <User class="size-4" /> Nome completo</span>
-            <input id="customerName" type="text" placeholder="Seu nome completo" class="input input-md w-full" bind:value={formData.customerName} />
+            <input id="customerName" type="text" placeholder="Seu nome completo" class="input input-md w-full" bind:value={formData.customerName} required />
         </label>
     </div>
     
@@ -150,20 +150,20 @@
 
             <label class="floating-label">
                 <span class="flex items-center gap-2"> <MapPin class="size-4" /> Nome da rua</span>
-                <input id="street" type="text" placeholder="Nome da rua" class="input input-md w-full" bind:value={formData.address.street} />
+                <input id="street" type="text" placeholder="Nome da rua" class="input input-md w-full" bind:value={formData.address.street} required />
             </label>
 
             
             <!-- Número com floating label e ícone -->
             <label class="floating-label">
                 <span class="flex items-center gap-2"> <Home class="size-4" /> Número</span>
-                <input id="number" type="text" placeholder="Número" class="input input-md w-full" bind:value={formData.address.number} />
+                <input id="number" type="text" placeholder="Número" class="input input-md w-full" bind:value={formData.address.number} required />
             </label>
             
             <!-- Bairro com floating label e ícone -->
             <label class="floating-label">
                 <span class="flex items-center gap-2"> <MapPin class="size-4" /> Bairro</span>
-                <input id="neighborhood" type="text" placeholder="Bairro" class="input input-md w-full" bind:value={formData.address.neighborhood} />
+                <input id="neighborhood" type="text" placeholder="Bairro" class="input input-md w-full" bind:value={formData.address.neighborhood} required />
             </label>
             
             <!-- Complemento com floating label e ícone -->
