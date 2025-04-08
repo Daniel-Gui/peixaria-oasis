@@ -24,6 +24,10 @@
 		{
 			name: 'Salmão',
 			slug: 'salmao'
+		},
+		{
+			name: 'Camarão',
+			slug: 'camarao'
 		}
 	];
 	

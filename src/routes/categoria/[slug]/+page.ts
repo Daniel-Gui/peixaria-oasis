@@ -48,6 +48,10 @@ const categoryMap: Record<string, { id: number; title: string }> = {
   'mais-vendidos': { 
     id: 493232, 
     title: 'Mais Vendidos' 
+  },
+  'camarao': { 
+    id: 498934, 
+    title: 'Camarão' 
   }
 };
 

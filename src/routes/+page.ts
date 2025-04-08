@@ -41,6 +41,7 @@ export const load: PageLoad = async ({ fetch }) => {
     const peixesAguaDoceId = 492181;
     const maisVendidosId = 493232;
     const salmaoId = 493225;
+    const camaraoId = 498934;
     
     // Token da API do Baserow
     const token = import.meta.env.VITE_BASEROW_API_TOKEN;
@@ -69,16 +70,18 @@ export const load: PageLoad = async ({ fetch }) => {
     }
     
     // Buscando produtos de todas as tabelas em paralelo
-    const [peixesAguaDoce, maisVendidos, salmao] = await Promise.all([
+    const [peixesAguaDoce, maisVendidos, salmao, camarao] = await Promise.all([
       fetchProducts(peixesAguaDoceId),
       fetchProducts(maisVendidosId),
-      fetchProducts(salmaoId)
+      fetchProducts(salmaoId),  
+      fetchProducts(camaraoId)
     ]);
     
     return {
       peixesAguaDoce,
       maisVendidos,
-      salmao
+      salmao,
+      camarao
     };
   } catch (err) {
     console.error('Erro ao carregar produtos:', err);

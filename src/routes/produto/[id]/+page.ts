@@ -31,8 +31,8 @@ interface Product {
 async function fetchProductById(id: string, fetchFn: typeof fetch): Promise<Product | null> {
   const token = import.meta.env.VITE_BASEROW_API_TOKEN;
   
-  // Vamos buscar em todas as tabelas
-  const tableIds = [492181, 493232, 493225]; // IDs das tabelas: Peixes de água doce, Mais Vendidos, Salmão
+  // Vamos buscar em todas as tabelas 
+  const tableIds = [492181, 493232, 493225, 498934]; // IDs das tabelas: Peixes de água doce, Mais Vendidos, Salmão, Camarão
   
   for (const tableId of tableIds) {
     try {
