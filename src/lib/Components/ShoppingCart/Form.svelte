@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { CreditCard, Banknote, Truck, Store, MapPin, Home } from 'lucide-svelte';
+    import { CreditCard, Banknote, Truck, Store, MapPin, Home, Building } from 'lucide-svelte';
+    import IconPix from '../CustomIcons/IconPix.svelte';
 
     // Usando $state para gerenciar o estado do formulário
     let formData = $state({
@@ -58,7 +59,7 @@
     <h3 class="font-semibold text-base">Informações adicionais</h3>
     
     <!-- Método de pagamento - Melhorado com ícones -->
-    <div class="form-control w-full">
+    <div class="form-control w-full space-y-2">
         <label for="payment-method" class="label pb-0">
             <span class="label-text font-medium">Método de pagamento</span>
         </label>
@@ -74,7 +75,7 @@
             </select>
             <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/70">
                 {#if formData.paymentMethod === 'PIX'}
-                    {@html getPaymentIcon('pix')}
+                    <IconPix customClass="size-4" />
                 {:else if formData.paymentMethod.includes('credit') || formData.paymentMethod.includes('debit')}
                     <CreditCard class="size-4" />
                 {:else if formData.paymentMethod === 'cash'}
@@ -89,7 +90,7 @@
         <label for="delivery-type" class="label pb-0">
             <span class="label-text font-medium">Forma de recebimento</span>
         </label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-2">
             <label class="flex items-center p-3 gap-3 cursor-pointer border rounded-lg hover:bg-base-200 transition-colors {formData.deliveryType === 'pickup' ? 'bg-primary/10' : ''}">
                 <input 
                     id="pickup"
@@ -148,86 +149,29 @@
     {#if formData.deliveryType === 'delivery'}
         <div class="space-y-4">
             <!-- Rua com floating label e ícone -->
-            <label class="form-control w-full">
-                <div class="label pb-0">
-                    <span class="label-text font-medium">Rua</span>
-                </div>
-                <div class="relative">
-                    <input 
-                        id="street"
-                        type="text" 
-                        placeholder="Nome da rua" 
-                        class="input input-bordered w-full pl-10" 
-                        bind:value={formData.address.street}
-                    />
-                    <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/70">
-                        <MapPin class="size-4" />
-                    </div>
-                </div>
+
+            <label class="floating-label">
+                <span class="flex items-center gap-2"> <MapPin class="size-4" /> Nome da rua</span>
+                <input id="street" type="text" placeholder="Nome da rua" class="input input-md w-full" bind:value={formData.address.street} />
             </label>
+
             
             <!-- Número com floating label e ícone -->
-            <label class="form-control w-full">
-                <div class="label pb-0">
-                    <span class="label-text font-medium">Número</span>
-                </div>
-                <div class="relative">
-                    <input 
-                        id="number"
-                        type="text" 
-                        placeholder="Número" 
-                        class="input input-bordered w-full pl-10" 
-                        bind:value={formData.address.number}
-                    />
-                    <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/70">
-                        <Home class="size-4" />
-                    </div>
-                </div>
+            <label class="floating-label">
+                <span class="flex items-center gap-2"> <Home class="size-4" /> Número</span>
+                <input id="number" type="text" placeholder="Número" class="input input-md w-full" bind:value={formData.address.number} />
             </label>
             
             <!-- Bairro com floating label e ícone -->
-            <label class="form-control w-full">
-                <div class="label pb-0">
-                    <span class="label-text font-medium">Bairro</span>
-                </div>
-                <div class="relative">
-                    <input 
-                        id="neighborhood"
-                        type="text" 
-                        placeholder="Bairro" 
-                        class="input input-bordered w-full pl-10" 
-                        bind:value={formData.address.neighborhood}
-                    />
-                    <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/70">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                            <circle cx="12" cy="10" r="3" />
-                        </svg>
-                    </div>
-                </div>
+            <label class="floating-label">
+                <span class="flex items-center gap-2"> <MapPin class="size-4" /> Bairro</span>
+                <input id="neighborhood" type="text" placeholder="Bairro" class="input input-md w-full" bind:value={formData.address.neighborhood} />
             </label>
             
             <!-- Complemento com floating label e ícone -->
-            <label class="form-control w-full">
-                <div class="label pb-0">
-                    <span class="label-text font-medium">Complemento (opcional)</span>
-                </div>
-                <div class="relative">
-                    <input 
-                        id="complement"
-                        type="text" 
-                        placeholder="Apartamento, bloco, referência..." 
-                        class="input input-bordered w-full pl-10" 
-                        bind:value={formData.address.complement}
-                    />
-                    <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/70">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
-                            <path d="M3 9V5a2 2 0 0 1 2-2h2" />
-                            <path d="M13 3h2a2 2 0 0 1 2 2v4" />
-                        </svg>
-                    </div>
-                </div>
+            <label class="floating-label">
+                <span class="flex items-center gap-2"> <Building class="size-4" /> Complemento (opcional)</span>
+                <input id="complement" type="text" placeholder="Apartamento, bloco, referência..." class="input input-md w-full" bind:value={formData.address.complement} />
             </label>
         </div>
     {/if}

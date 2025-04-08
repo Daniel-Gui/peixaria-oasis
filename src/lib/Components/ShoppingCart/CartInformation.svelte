@@ -2,15 +2,11 @@
     const faqs = [
         {
             title: 'Como funciona a pesagem dos produtos?',
-            content: 'Nossos produtos são vendidos por quilo e pesados frescos no momento da separação. O valor total exato será confirmado via WhatsApp após a pesagem do produto fresco. O valor mostrado no carrinho é apenas uma estimativa baseada na quantidade selecionada.'
-        },
-        {
-            title: 'Quais são as formas de pagamento disponíveis?',
-            content: 'Você pode escolher entre: PIX (enviaremos um link de pagamento), cartão de crédito, cartão de débito ou dinheiro (somente para retirada na loja). A forma de pagamento será confirmada durante nossa conversa no WhatsApp.'
+            content: 'Os produtos vendidos por quilo são pesados no momento da separação do pedido e podem ter uma variação para mais ou para menos referente à quantidade solicitada. O valor total exato será confirmado via WhatsApp após a pesagem do(s) produto(s). O valor mostrado no carrinho é somente uma estimativa baseada na quantidade selecionada.'
         },
         {
             title: 'Como funciona a entrega?',
-            content: 'Após finalizar seu pedido, confirmaremos seu endereço de entrega via WhatsApp. O valor do frete será calculado com base na sua localização e informado durante a conversa. Você também pode optar por retirar seu pedido diretamente em nossa loja.'
+            content: 'Após finalizar seu pedido, O valor do frete será calculado com base na sua localização e informado durante a conversa. Você também pode optar por retirar seu pedido diretamente em nossa loja.'
         }
     ];
 </script>
