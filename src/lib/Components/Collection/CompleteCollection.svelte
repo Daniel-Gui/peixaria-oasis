@@ -13,7 +13,7 @@
 		promotionalPrice?: number;
 	}> = [];
 </script>
-<section>
+<section class="bg-base-200">
     <div class="container py-10 space-y-6">
         <div class="text-center">
             <h2 class="text-2xl font-bold mb-4">{title}</h2>
