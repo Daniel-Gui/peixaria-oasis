@@ -7,7 +7,7 @@
 </script>
 
 <footer>
-	<div class="container grid grid-cols-1 gap-4 py-16 md:grid-cols-4">
+	<div class="container grid grid-cols-1 gap-6 md:gap-4 py-16 md:grid-cols-4">
 		<div class="space-y-2">
 			<img class="h-auto w-26 lg:w-32" src="/images/brand/brandcompany.webp" alt="logo-marca" />
 			<p>
@@ -38,6 +38,9 @@
 		<div class="space-y-2">
             <img src="/images/security/selo-seguranca-google.webp" alt="selo-seguranca-cloudflare" class="w-auto h-12 rounded-box shadow-sm">
             <img src="/images/security/selo-seguranca-cloudflare.webp" alt="selo-seguranca-cloudflare" class="w-auto h-12 rounded-box shadow-sm">
+			<a href="https://www.linkedin.com/in/danielguii/" target="_blank">
+				<img src="/images/security/selo-dev-dan.webp" alt="desenvolvedor" class="w-auto h-12 rounded-box shadow-sm">
+			</a>
 		</div>
 	</div>
 	<div class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">

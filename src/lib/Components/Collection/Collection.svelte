@@ -40,89 +40,203 @@
 
 	// Usando $state para variáveis de estado
 	let swiper = $state<any>(null);
+	let isBeginning = $state(true);
+	let isEnd = $state(false);
+	let isInitialized = $state(false);
+	let isVisible = $state(false); // Controla a visibilidade do Swiper com CSS
 	
 	// Usando $derived para valores derivados
 	const hasProducts = $derived(products && products.length > 0);
 	
-	// Usando $effect para inicializar o swiper após a montagem do componente
-	$effect(() => {
-		// Este código será executado após a renderização inicial
-		// Similar ao onMount, mas com capacidades reativas
-		const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void };
-
-		// swiper parameters
-		const swiperParams = {
-			grabCursor: true,
-			pagination: {
-				enabled: true,
-				clickable: true,
-				bulletClass: 'swiper-pagination-bullet',
-				bulletActiveClass: 'swiper-pagination-bullet-active'
-			},
-			slidesPerView: 1.2,
-			spaceBetween: 10,
-			breakpoints: {
-				768: {
-					slidesPerView: 2.5,
-					spaceBetween: 15
-				},
-				1024: {
-					slidesPerView: 3,
-					spaceBetween: 15,
-					centeredSlides: false
-				},
-				1440: {
-					slidesPerView: 4,
-					spaceBetween: 15,
-					centeredSlides: false
-				}
-			},
-			on: {
-				init() {
-					swiper = this;
-				}
+	// Importando onMount para garantir que o código seja executado após a montagem do DOM
+	import { onMount, onDestroy } from 'svelte';
+	
+	// Função para inicializar o Swiper
+	function initializeSwiper() {
+		// Esconde o Swiper durante a inicialização para evitar piscar
+		isVisible = false;
+		
+		// Se já está inicializado e estamos apenas voltando para a página, não reinicialize
+		if (isInitialized && swiper && document.visibilityState === 'visible') {
+			// Apenas atualize os slides se necessário
+			swiper.update();
+			// Torna o Swiper visível novamente após a atualização
+			setTimeout(() => {
+				isVisible = true;
+			}, 50);
+			return;
+		}
+		
+		// Aguarda um momento para garantir que o DOM está pronto
+		setTimeout(() => {
+			const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void, swiper?: any };
+			
+			if (!swiperEl) {
+				console.warn(`Elemento Swiper #${swiperId} não encontrado`);
+				return;
 			}
-		};
+			
+			// Se já existe uma instância do Swiper e estamos reinicializando, destrua-a apenas se necessário
+			if (swiperEl.swiper && !isInitialized) {
+				console.log(`Reinicializando Swiper para coleção ${title}`);
+				swiperEl.swiper.destroy(true, true);
+			}
 
-		if (swiperEl) {
+			// swiper parameters
+			const swiperParams = {
+				grabCursor: true,
+				pagination: {
+					enabled: true,
+					clickable: true,
+					bulletClass: 'swiper-pagination-bullet',
+					bulletActiveClass: 'swiper-pagination-bullet-active'
+				},
+				slidesPerView: 1.1,
+				spaceBetween: 10,
+				centeredSlides: true,
+				breakpoints: {
+					768: {
+						slidesPerView: 2.5,
+						spaceBetween: 15
+					},
+					1024: {
+						slidesPerView: 3,
+						spaceBetween: 15,
+						centeredSlides: false
+					},
+					1440: {
+						slidesPerView: 4,
+						spaceBetween: 15,
+						centeredSlides: false
+					}
+				},
+				on: {
+					init(swiperInstance: any) {
+						swiper = swiperInstance;
+						// Inicializa os estados dos botões
+						isBeginning = swiper.isBeginning;
+						isEnd = swiper.isEnd;
+						isInitialized = true;
+						// Torna o Swiper visível após a inicialização
+						setTimeout(() => {
+							isVisible = true;
+						}, 50);
+						console.log(`Coleção ${title} inicializada com ${products.length} produtos`);
+					},
+					slideChange(swiperInstance: any) {
+						// Atualiza os estados dos botões quando os slides mudam
+						isBeginning = swiperInstance.isBeginning;
+						isEnd = swiperInstance.isEnd;
+					}
+				}
+			};
+
 			Object.assign(swiperEl, swiperParams);
+			
 			// Verificar se o método initialize existe antes de chamá-lo
 			if (typeof swiperEl.initialize === 'function') {
 				swiperEl.initialize();
 			}
+		}, 100); // Pequeno delay para garantir que o DOM está pronto
+	}
+	
+	// Usando $effect para monitorar mudanças nos produtos
+	$effect(() => {
+		// Reinicializa o Swiper quando os produtos mudam
+		if (products.length > 0) {
+			initializeSwiper();
 		}
+	});
+	
+	// Inicializa o Swiper quando o componente é montado
+	onMount(() => {
+		// Inicializa o Swiper após um pequeno delay para garantir que o DOM está pronto
+		const initTimer = setTimeout(initializeSwiper, 100);
 		
-		// Registrar quando a coleção é inicializada
-		console.log(`Coleção ${title} inicializada com ${products.length} produtos`);
+		// Em vez de reinicializar completamente, apenas atualize quando a página for revisitada
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === 'visible' && isInitialized && swiper) {
+				swiper.update();
+			}
+		};
+		
+		// Usar visibilitychange é melhor que focus para detectar quando a página é revisitada
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+		
+		// Adiciona um evento para atualizar o Swiper quando a janela é redimensionada
+		const handleResize = () => {
+			if (swiper) {
+				swiper.update();
+				isBeginning = swiper.isBeginning;
+				isEnd = swiper.isEnd;
+			}
+		};
+		window.addEventListener('resize', handleResize);
+		
+		// Limpeza ao desmontar o componente
+		return () => {
+			clearTimeout(initTimer);
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+			window.removeEventListener('resize', handleResize);
+			
+			// Marca como não inicializado
+			isInitialized = false;
+			
+			// Tenta destruir a instância do Swiper ao desmontar o componente
+			try {
+				if (swiper) {
+					swiper.destroy(true, true);
+					swiper = null;
+				}
+			} catch (error) {
+				console.warn('Erro ao destruir Swiper:', error);
+			}
+		};
 	});
 
 	// Funções para navegar entre os slides
 	function slideNext() {
 		if (swiper) {
 			swiper.slideNext();
+			// Atualiza os estados após a navegação
+			isBeginning = swiper.isBeginning;
+			isEnd = swiper.isEnd;
 		}
 	}
 
 	function slidePrev() {
 		if (swiper) {
 			swiper.slidePrev();
+			// Atualiza os estados após a navegação
+			isBeginning = swiper.isBeginning;
+			isEnd = swiper.isEnd;
 		}
 	}
 </script>
 
 <section class="{customClass} space-y-4 lg:space-y-6 py-10">
+	<!-- Estilo para controlar a visibilidade do Swiper -->
+	<style>
+		.swiper-container {
+			opacity: 0;
+			transition: opacity 0.3s ease-in-out;
+		}
+		.swiper-container.visible {
+			opacity: 1;
+		}
+	</style>
 	<div class="container flex items-center justify-between">
 		<h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">{title}</h2>
 		<div class="space-x-2">
-			<button onclick={slidePrev} class="btn btn-circle rounded-full">
+			<button onclick={slidePrev} class="btn btn-circle rounded-full {isBeginning ? 'btn-disabled' : ''}" aria-label="Navegar para o slide anterior">
 				<ChevronLeft class="h-5 w-5" />
 			</button>
-			<button onclick={slideNext} class="btn btn-circle rounded-full">
+			<button onclick={slideNext} class="btn btn-circle rounded-full {isEnd ? 'btn-disabled' : ''}" aria-label="Navegar para o slide seguinte">
 				<ChevronRight class="h-5 w-5" />
 			</button>
 		</div>
 	</div>
-	<div class="pl-6 md:pl-12 lg:container">
+	<div class="lg:container swiper-container {isVisible ? 'visible' : ''}">
 		<swiper-container id={swiperId} init="false">
 			{#if hasProducts}
 				{#each products as product (product.id)}

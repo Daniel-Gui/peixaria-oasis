@@ -2,6 +2,8 @@
 	import { X } from 'lucide-svelte';
 	import ProductList from '../ShoppingCart/ProductList.svelte';
 	import Categories from './Categories.svelte';
+	import { page } from '$app/stores';
+	import { onMount, onDestroy } from 'svelte';
 
 	type DrawerProps = {
 		id: string;
@@ -9,10 +11,32 @@
 	};
 
 	let { id = 'my-drawer', type = 'sidebar' }: DrawerProps = $props();
+	let drawerCheckbox: HTMLInputElement;
+	let currentPath: string;
+	
+	// Função para fechar a sidebar
+	function closeDrawer() {
+		if (drawerCheckbox && drawerCheckbox.checked) {
+			drawerCheckbox.checked = false;
+		}
+	}
+	
+	// Monitorar mudanças de rota para fechar a sidebar
+	$effect(() => {
+		if (type === 'sidebar' && $page.url.pathname !== currentPath) {
+			currentPath = $page.url.pathname;
+			closeDrawer();
+		}
+	})
+	
+	// Inicializar o caminho atual
+	onMount(() => {
+		currentPath = $page.url.pathname;
+	});
 </script>
 
 <div class="drawer z-10" class:drawer-end={type === 'cart'}>
-	<input {id} type="checkbox" class="drawer-toggle" />
+	<input {id} type="checkbox" class="drawer-toggle" bind:this={drawerCheckbox} />
 
 	<div class="drawer-side">
 		<label for={id} aria-label="close sidebar" class="drawer-overlay"></label>
