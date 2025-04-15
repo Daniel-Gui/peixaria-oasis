@@ -42,6 +42,8 @@
 	let swiper = $state<any>(null);
 	let isBeginning = $state(true);
 	let isEnd = $state(false);
+	let isInitialized = $state(false);
+	let isVisible = $state(false); // Controla a visibilidade do Swiper com CSS
 	
 	// Usando $derived para valores derivados
 	const hasProducts = $derived(products && products.length > 0);
@@ -51,6 +53,20 @@
 	
 	// Função para inicializar o Swiper
 	function initializeSwiper() {
+		// Esconde o Swiper durante a inicialização para evitar piscar
+		isVisible = false;
+		
+		// Se já está inicializado e estamos apenas voltando para a página, não reinicialize
+		if (isInitialized && swiper && document.visibilityState === 'visible') {
+			// Apenas atualize os slides se necessário
+			swiper.update();
+			// Torna o Swiper visível novamente após a atualização
+			setTimeout(() => {
+				isVisible = true;
+			}, 50);
+			return;
+		}
+		
 		// Aguarda um momento para garantir que o DOM está pronto
 		setTimeout(() => {
 			const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void, swiper?: any };
@@ -60,8 +76,8 @@
 				return;
 			}
 			
-			// Se já existe uma instância do Swiper e estamos reinicializando, destrua-a
-			if (swiperEl.swiper) {
+			// Se já existe uma instância do Swiper e estamos reinicializando, destrua-a apenas se necessário
+			if (swiperEl.swiper && !isInitialized) {
 				console.log(`Reinicializando Swiper para coleção ${title}`);
 				swiperEl.swiper.destroy(true, true);
 			}
@@ -99,6 +115,11 @@
 						// Inicializa os estados dos botões
 						isBeginning = swiper.isBeginning;
 						isEnd = swiper.isEnd;
+						isInitialized = true;
+						// Torna o Swiper visível após a inicialização
+						setTimeout(() => {
+							isVisible = true;
+						}, 50);
 						console.log(`Coleção ${title} inicializada com ${products.length} produtos`);
 					},
 					slideChange(swiperInstance: any) {
@@ -131,23 +152,40 @@
 		// Inicializa o Swiper após um pequeno delay para garantir que o DOM está pronto
 		const initTimer = setTimeout(initializeSwiper, 100);
 		
-		// Adiciona um evento para reinicializar o Swiper quando a página é revisitada
-		window.addEventListener('focus', initializeSwiper);
+		// Em vez de reinicializar completamente, apenas atualize quando a página for revisitada
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === 'visible' && isInitialized && swiper) {
+				swiper.update();
+			}
+		};
 		
-		// Adiciona um evento para reinicializar o Swiper quando a janela é redimensionada
-		window.addEventListener('resize', initializeSwiper);
+		// Usar visibilitychange é melhor que focus para detectar quando a página é revisitada
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+		
+		// Adiciona um evento para atualizar o Swiper quando a janela é redimensionada
+		const handleResize = () => {
+			if (swiper) {
+				swiper.update();
+				isBeginning = swiper.isBeginning;
+				isEnd = swiper.isEnd;
+			}
+		};
+		window.addEventListener('resize', handleResize);
 		
 		// Limpeza ao desmontar o componente
 		return () => {
 			clearTimeout(initTimer);
-			window.removeEventListener('focus', initializeSwiper);
-			window.removeEventListener('resize', initializeSwiper);
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+			window.removeEventListener('resize', handleResize);
+			
+			// Marca como não inicializado
+			isInitialized = false;
 			
 			// Tenta destruir a instância do Swiper ao desmontar o componente
 			try {
-				const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { swiper?: any };
-				if (swiperEl && swiperEl.swiper) {
-					swiperEl.swiper.destroy(true, true);
+				if (swiper) {
+					swiper.destroy(true, true);
+					swiper = null;
 				}
 			} catch (error) {
 				console.warn('Erro ao destruir Swiper:', error);
@@ -176,6 +214,16 @@
 </script>
 
 <section class="{customClass} space-y-4 lg:space-y-6 py-10">
+	<!-- Estilo para controlar a visibilidade do Swiper -->
+	<style>
+		.swiper-container {
+			opacity: 0;
+			transition: opacity 0.3s ease-in-out;
+		}
+		.swiper-container.visible {
+			opacity: 1;
+		}
+	</style>
 	<div class="container flex items-center justify-between">
 		<h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">{title}</h2>
 		<div class="space-x-2">
@@ -187,7 +235,7 @@
 			</button>
 		</div>
 	</div>
-	<div class="pl-6 md:pl-12 lg:container">
+	<div class="pl-6 md:pl-12 lg:container swiper-container {isVisible ? 'visible' : ''}">
 		<swiper-container id={swiperId} init="false">
 			{#if hasProducts}
 				{#each products as product (product.id)}
