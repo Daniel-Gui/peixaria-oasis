@@ -227,10 +227,10 @@
 	<div class="container flex items-center justify-between">
 		<h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">{title}</h2>
 		<div class="space-x-2">
-			<button onclick={slidePrev} class="btn btn-circle rounded-full {isBeginning ? 'btn-disabled' : ''}">
+			<button onclick={slidePrev} class="btn btn-circle rounded-full {isBeginning ? 'btn-disabled' : ''}" aria-label="Navegar para o slide anterior">
 				<ChevronLeft class="h-5 w-5" />
 			</button>
-			<button onclick={slideNext} class="btn btn-circle rounded-full {isEnd ? 'btn-disabled' : ''}">
+			<button onclick={slideNext} class="btn btn-circle rounded-full {isEnd ? 'btn-disabled' : ''}" aria-label="Navegar para o slide seguinte">
 				<ChevronRight class="h-5 w-5" />
 			</button>
 		</div>

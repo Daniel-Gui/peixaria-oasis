@@ -27,7 +27,13 @@
 	});
 </script>
 
-<!--<Dock />-->
+<svelte:head>
+	<title>Peixaria Oasis - Início</title>
+	<meta name="description" content="Bem-vindo à Peixaria Oasis - Início" />
+	<meta name="keywords" content="peixaria, peixaria oasis, peixes, peixes de agua doce, peixes de agua salgada, salmao, camarao" />
+	<meta name="robots" content="index, follow" />
+	<link rel="shortcut icon" type="image/webp" href="/favicon.webp" />
+</svelte:head>
 
 <!-- Mais Vendidos -->
 {#if temMaisVendidos}
