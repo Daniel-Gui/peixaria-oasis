@@ -6,10 +6,8 @@
 	import IconMap from '../CustomIcons/IconMap.svelte';
 	import { page } from '$app/stores';
 
-	// URLs para contato
-	const googleMapsUrl: string = 'https://maps.app.goo.gl/FrG3fcqxkYrgSR5v9';
-	const emailUrl: string = 'mailto:peixariaoasis@gmail.com';
-	const whatsappUrl: string = 'https://wa.me/5567999915087';
+	// Importa URLs centralizadas
+	import { googleMapsUrl, emailUrl, whatsappUrl, instagramUrl, facebookUrl } from '$lib/utils/company';
 	
 	// Categorias de produtos
 	const categories = [
@@ -38,12 +36,12 @@
 	const socials = [
 		{
 			name: 'Instagram',
-			url: '/',
+			url: instagramUrl,
 			icon: IconInstagram
 		},
 		{
 			name: 'Facebook',
-			url: '/',
+			url: facebookUrl,
 			icon: IconFacebook
 		},
 	];

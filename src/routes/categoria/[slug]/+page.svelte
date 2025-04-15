@@ -1,7 +1,5 @@
 <script lang="ts">
 	import CompleteCollection from '$lib/Components/Collection/CompleteCollection.svelte';
-	import Navbar from '$lib/Components/Navigation/Navbar.svelte';
-	import type { PageData } from './$types';
 	import { page } from '$app/state';
 	
 	// Recebendo os dados da API através da função load
@@ -47,6 +45,5 @@
 	}
 </script>
 
-<Navbar />
 
 <CompleteCollection title={categoryTitle} products={mappedProducts} />

@@ -77,7 +77,7 @@
 	}
 </script>
 
-<section>
+<section class="bg-base-200">
 	<div class="container grid grid-cols-1 gap-4 py-10 md:grid-cols-2">
 		<div class="rounded-lg overflow-hidden">
 			<img src={imageUrl} alt={title} class="w-full h-auto object-cover" />
