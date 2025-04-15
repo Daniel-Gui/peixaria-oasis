@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Collection from '$lib/Components/Collection/Collection.svelte';
+	import { fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import { register } from 'swiper/element/bundle';
 	register();
 
@@ -35,8 +37,12 @@
 	<link rel="shortcut icon" type="image/webp" href="/favicon.webp" />
 </svelte:head>
 
-<!-- Mais Vendidos -->
-{#if temMaisVendidos}
+<div 
+	in:fade={{ duration: 300, delay: 150, easing: cubicOut }}
+	out:fade={{ duration: 150, easing: cubicOut }}
+>
+	<!-- Mais Vendidos -->
+	{#if temMaisVendidos}
 	<Collection
 		swiperId="mais-vendidos"
 		customClass="bg-base-100"
@@ -80,3 +86,4 @@
 		<p>Desculpe, não há produtos disponíveis na categoria Camarão no momento.</p>
 	</div>
 {/if}
+</div>
