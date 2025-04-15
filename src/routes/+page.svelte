@@ -1,10 +1,6 @@
 <script lang="ts">
 	import Collection from '$lib/Components/Collection/Collection.svelte';
-	import Dock from '$lib/Components/Navigation/Dock.svelte';
 	import { register } from 'swiper/element/bundle';
-	import type { PageData } from './$types';
-	import Navbar from '$lib/Components/Navigation/Navbar.svelte';
-	import Footer from '$lib/Components/Navigation/Footer.svelte';
 	register();
 
 	// Recebendo os dados da API através da função load usando $props
@@ -29,7 +25,7 @@
 	});
 </script>
 
-<Navbar />
+
 
 <!--<Dock />-->
 
@@ -79,4 +75,4 @@
 	</div>
 {/if}
 
-<Footer/>
+
