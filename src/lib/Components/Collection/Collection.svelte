@@ -40,72 +40,137 @@
 
 	// Usando $state para variáveis de estado
 	let swiper = $state<any>(null);
+	let isBeginning = $state(true);
+	let isEnd = $state(false);
 	
 	// Usando $derived para valores derivados
 	const hasProducts = $derived(products && products.length > 0);
 	
-	// Usando $effect para inicializar o swiper após a montagem do componente
-	$effect(() => {
-		// Este código será executado após a renderização inicial
-		// Similar ao onMount, mas com capacidades reativas
-		const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void };
-
-		// swiper parameters
-		const swiperParams = {
-			grabCursor: true,
-			pagination: {
-				enabled: true,
-				clickable: true,
-				bulletClass: 'swiper-pagination-bullet',
-				bulletActiveClass: 'swiper-pagination-bullet-active'
-			},
-			slidesPerView: 1.2,
-			spaceBetween: 10,
-			breakpoints: {
-				768: {
-					slidesPerView: 2.5,
-					spaceBetween: 15
-				},
-				1024: {
-					slidesPerView: 3,
-					spaceBetween: 15,
-					centeredSlides: false
-				},
-				1440: {
-					slidesPerView: 4,
-					spaceBetween: 15,
-					centeredSlides: false
-				}
-			},
-			on: {
-				init() {
-					swiper = this;
-				}
+	// Importando onMount para garantir que o código seja executado após a montagem do DOM
+	import { onMount, onDestroy } from 'svelte';
+	
+	// Função para inicializar o Swiper
+	function initializeSwiper() {
+		// Aguarda um momento para garantir que o DOM está pronto
+		setTimeout(() => {
+			const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { initialize?: () => void, swiper?: any };
+			
+			if (!swiperEl) {
+				console.warn(`Elemento Swiper #${swiperId} não encontrado`);
+				return;
 			}
-		};
+			
+			// Se já existe uma instância do Swiper e estamos reinicializando, destrua-a
+			if (swiperEl.swiper) {
+				console.log(`Reinicializando Swiper para coleção ${title}`);
+				swiperEl.swiper.destroy(true, true);
+			}
 
-		if (swiperEl) {
+			// swiper parameters
+			const swiperParams = {
+				grabCursor: true,
+				pagination: {
+					enabled: true,
+					clickable: true,
+					bulletClass: 'swiper-pagination-bullet',
+					bulletActiveClass: 'swiper-pagination-bullet-active'
+				},
+				slidesPerView: 1.2,
+				spaceBetween: 10,
+				breakpoints: {
+					768: {
+						slidesPerView: 2.5,
+						spaceBetween: 15
+					},
+					1024: {
+						slidesPerView: 3,
+						spaceBetween: 15,
+						centeredSlides: false
+					},
+					1440: {
+						slidesPerView: 4,
+						spaceBetween: 15,
+						centeredSlides: false
+					}
+				},
+				on: {
+					init(swiperInstance: any) {
+						swiper = swiperInstance;
+						// Inicializa os estados dos botões
+						isBeginning = swiper.isBeginning;
+						isEnd = swiper.isEnd;
+						console.log(`Coleção ${title} inicializada com ${products.length} produtos`);
+					},
+					slideChange(swiperInstance: any) {
+						// Atualiza os estados dos botões quando os slides mudam
+						isBeginning = swiperInstance.isBeginning;
+						isEnd = swiperInstance.isEnd;
+					}
+				}
+			};
+
 			Object.assign(swiperEl, swiperParams);
+			
 			// Verificar se o método initialize existe antes de chamá-lo
 			if (typeof swiperEl.initialize === 'function') {
 				swiperEl.initialize();
 			}
+		}, 100); // Pequeno delay para garantir que o DOM está pronto
+	}
+	
+	// Usando $effect para monitorar mudanças nos produtos
+	$effect(() => {
+		// Reinicializa o Swiper quando os produtos mudam
+		if (products.length > 0) {
+			initializeSwiper();
 		}
+	});
+	
+	// Inicializa o Swiper quando o componente é montado
+	onMount(() => {
+		// Inicializa o Swiper após um pequeno delay para garantir que o DOM está pronto
+		const initTimer = setTimeout(initializeSwiper, 100);
 		
-		// Registrar quando a coleção é inicializada
-		console.log(`Coleção ${title} inicializada com ${products.length} produtos`);
+		// Adiciona um evento para reinicializar o Swiper quando a página é revisitada
+		window.addEventListener('focus', initializeSwiper);
+		
+		// Adiciona um evento para reinicializar o Swiper quando a janela é redimensionada
+		window.addEventListener('resize', initializeSwiper);
+		
+		// Limpeza ao desmontar o componente
+		return () => {
+			clearTimeout(initTimer);
+			window.removeEventListener('focus', initializeSwiper);
+			window.removeEventListener('resize', initializeSwiper);
+			
+			// Tenta destruir a instância do Swiper ao desmontar o componente
+			try {
+				const swiperEl = document.querySelector(`#${swiperId}`) as HTMLElement & { swiper?: any };
+				if (swiperEl && swiperEl.swiper) {
+					swiperEl.swiper.destroy(true, true);
+				}
+			} catch (error) {
+				console.warn('Erro ao destruir Swiper:', error);
+			}
+		};
 	});
 
 	// Funções para navegar entre os slides
 	function slideNext() {
 		if (swiper) {
 			swiper.slideNext();
+			// Atualiza os estados após a navegação
+			isBeginning = swiper.isBeginning;
+			isEnd = swiper.isEnd;
 		}
 	}
 
 	function slidePrev() {
 		if (swiper) {
 			swiper.slidePrev();
+			// Atualiza os estados após a navegação
+			isBeginning = swiper.isBeginning;
+			isEnd = swiper.isEnd;
 		}
 	}
 </script>
@@ -114,10 +179,10 @@
 	<div class="container flex items-center justify-between">
 		<h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">{title}</h2>
 		<div class="space-x-2">
-			<button onclick={slidePrev} class="btn btn-circle rounded-full">
+			<button onclick={slidePrev} class="btn btn-circle rounded-full {isBeginning ? 'btn-disabled' : ''}">
 				<ChevronLeft class="h-5 w-5" />
 			</button>
-			<button onclick={slideNext} class="btn btn-circle rounded-full">
+			<button onclick={slideNext} class="btn btn-circle rounded-full {isEnd ? 'btn-disabled' : ''}">
 				<ChevronRight class="h-5 w-5" />
 			</button>
 		</div>

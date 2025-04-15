@@ -7,7 +7,7 @@
 </script>
 
 <footer>
-	<div class="container grid grid-cols-1 gap-4 py-16 md:grid-cols-4">
+	<div class="container grid grid-cols-1 gap-6 md:gap-4 py-16 md:grid-cols-4">
 		<div class="space-y-2">
 			<img class="h-auto w-26 lg:w-32" src="/images/brand/brandcompany.webp" alt="logo-marca" />
 			<p>
