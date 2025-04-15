@@ -91,8 +91,9 @@
 					bulletClass: 'swiper-pagination-bullet',
 					bulletActiveClass: 'swiper-pagination-bullet-active'
 				},
-				slidesPerView: 1.2,
+				slidesPerView: 1.1,
 				spaceBetween: 10,
+				centeredSlides: true,
 				breakpoints: {
 					768: {
 						slidesPerView: 2.5,
@@ -235,7 +236,7 @@
 			</button>
 		</div>
 	</div>
-	<div class="pl-6 md:pl-12 lg:container swiper-container {isVisible ? 'visible' : ''}">
+	<div class="lg:container swiper-container {isVisible ? 'visible' : ''}">
 		<swiper-container id={swiperId} init="false">
 			{#if hasProducts}
 				{#each products as product (product.id)}

@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { register } from 'swiper/element/bundle';
+	import EmptyCollection from '$lib/Components/EmptyCollection/EmptyCollection.svelte';
 	register();
 
 	// Recebendo os dados da API através da função load usando $props
@@ -50,9 +51,7 @@
 		products={maisVendidos}
 	/>
 {:else}
-	<div class="container py-10 text-center">
-		<p>Desculpe, não há produtos disponíveis na categoria Mais Vendidos no momento.</p>
-	</div>
+<EmptyCollection collectionName="Mais Vendidos"/>
 {/if}
 
 <!-- Peixes de Água Doce -->
@@ -64,26 +63,20 @@
 		products={peixesAguaDoce}
 	/>
 {:else}
-	<div class="container py-10 text-center">
-		<p>Desculpe, não há produtos disponíveis na categoria Peixes de Água Doce no momento.</p>
-	</div>
+<EmptyCollection collectionName="Peixes de Água Doce"/>
 {/if}
 
 <!-- Salmão -->
 {#if temSalmao}
 	<Collection swiperId="salmao" customClass="bg-base-100" title="Salmão" products={salmao} />
 {:else}
-	<div class="container py-10 text-center">
-		<p>Desculpe, não há produtos disponíveis na categoria Salmão no momento.</p>
-	</div>
+<EmptyCollection collectionName="Salmão"/>
 {/if}
 
 <!-- Camarão -->
 {#if temCamarao}
 	<Collection swiperId="camarao" customClass="bg-base-200" title="Camarão" products={camarao} />
 {:else}
-	<div class="container py-10 text-center">
-		<p>Desculpe, não há produtos disponíveis na categoria Camarão no momento.</p>
-	</div>
+<EmptyCollection collectionName="Camarão"/>
 {/if}
 </div>

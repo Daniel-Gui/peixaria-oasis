@@ -38,6 +38,9 @@
 		<div class="space-y-2">
             <img src="/images/security/selo-seguranca-google.webp" alt="selo-seguranca-cloudflare" class="w-auto h-12 rounded-box shadow-sm">
             <img src="/images/security/selo-seguranca-cloudflare.webp" alt="selo-seguranca-cloudflare" class="w-auto h-12 rounded-box shadow-sm">
+			<a href="https://www.linkedin.com/in/danielguii/" target="_blank">
+				<img src="/images/security/selo-dev-dan.webp" alt="desenvolvedor" class="w-auto h-12 rounded-box shadow-sm">
+			</a>
 		</div>
 	</div>
 	<div class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
