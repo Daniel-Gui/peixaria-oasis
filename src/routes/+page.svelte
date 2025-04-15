@@ -4,6 +4,7 @@
 	import { register } from 'swiper/element/bundle';
 	import type { PageData } from './$types';
 	import Navbar from '$lib/Components/Navigation/Navbar.svelte';
+	import Footer from '$lib/Components/Navigation/Footer.svelte';
 	register();
 
 	// Recebendo os dados da API através da função load usando $props
@@ -77,3 +78,5 @@
 		<p>Desculpe, não há produtos disponíveis na categoria Camarão no momento.</p>
 	</div>
 {/if}
+
+<Footer/>
